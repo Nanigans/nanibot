@@ -1,0 +1,1 @@
+This directory contains main executable programs that accomplish specific tasks, or missions.  Only one mission program should be executed at a time.  The launched mission program will launch all subprocesses and threads it requires to accomplish its task. 
