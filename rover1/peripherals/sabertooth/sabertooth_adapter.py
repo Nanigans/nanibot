@@ -1,4 +1,5 @@
 import serial
+import pigpio
 import time
 #import loggers
 
@@ -21,6 +22,9 @@ DO_LOOPBACK = False
 DEFAULT_PORT = '/dev/ttyAMA0'
 DEFAULT_BAUD = 9600
 DEFAULT_ADDRESS = 131
+DEFAULT_GPIO_TX = 25
+DEFAULT_GPIO_WORD_OFFSET = 0 # microseconds
+DEFAULT_STOP_BITS = 1
 CHECKSUM_SALT = 0b01111111
 AUTO_BAUD_RATE_COMMAND = 0b10101010
 
@@ -218,4 +222,78 @@ class SabertoothPacketizedAdapter:
     self._send_packet(
       self._get_packet_for_command(
         M2_FWD,0))
+
+class SabertoothPacketizedAdapterGPIO(SabertoothPacketizedAdapter):
+  
+  _conn = None
+  _gpio_tx_port = None
+  _gpio_baud = None
+  _gpio_offset = None
+  _gpio_stop_bits = None
+  _serial_address = None
+
+  # - Create and setup the motor controllor adapter
+  def __init__(self,
+    port=DEFAULT_GPIO_TX,
+    baudrate=DEFAULT_BAUD,
+    serial_address=DEFAULT_ADDRESS,
+    word_offset=DEFAULT_GPIO_WORD_OFFSET,
+    stop_bits=DEFAULT_STOP_BITS):
+
+    if SIM_MODE:
+      print 'In sim mode.  Commands will not be sent to TXD.'
+
+    # Create serial connection
+    self._conn = pigpio.pi()
+    # Initialize GPIO TX Pin
+    self._conn.set_mode(port,pigpio.OUTPUT)
+    self._conn.set_pull_up_down(port, pigpio.PUD_DOWN)
+
+    # Define the settings required by pigpio api
+    self._gpio_tx_port = port
+    self._gpio_baud = baudrate
+    self._gpio_offset = word_offset
+    self._gpio_stop_bits = stop_bits
+
+    # Initialize sabertooth
+    time.sleep(3)
+    self._write_bytes(bytearray([AUTO_BAUD_RATE_COMMAND]))
+
+    self._serial_address = serial_address
+
+    # Sabertooth requires you to define a min battery voltage upon startup
+    self._send_packet(
+      self._get_packet_for_command(
+        MIN_VOLTAGE_COMMAND,10))
+
+  def _shutdown(self):
+    self._conn.stop()
+
+  def _write_bytes(self,data_bytes):
+    # write convention for pigpio (http://abyz.co.uk/rpi/pigpio/python.html)
+    # 1. wave_clear()
+    # 2. wave_add_*()
+    # 3. id = wave_create()
+    # 4. wave_send_*(id)
+
+    # wait 1 ms before clearing, as a heuristic precaution against blowing away the previous waveform
+    time.sleep(0.001)
+    self._conn.wave_clear()
+
+    self._conn.wave_add_serial(
+      self._gpio_tx_port,
+      self._gpio_baud,
+      data_bytes)
+      #self._gpio_offset,
+      #8.0*len(data_bytes),
+      #2.0*self._gpio_stop_bits)
+
+    wf_id = self._conn.wave_create()
+    if SIM_MODE:
+      print "size of current waveform: {micros} us; {pulses} pulses".format(micros=self._conn.wave_get_micros(),pulses=self._conn.wave_get_pulses())
+    else:
+      self._conn.wave_send_once(wf_id)
+
+      while self._conn.wave_tx_busy():
+        time.sleep(0.01)
 
