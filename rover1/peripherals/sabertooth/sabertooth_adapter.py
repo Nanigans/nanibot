@@ -1,3 +1,4 @@
+from __future__ import division
 import serial
 import pigpio
 import time
@@ -42,6 +43,17 @@ MIXED_R_TURN = 10
 MIXED_L_TURN = 11
 MIXED_BWD_FWD = 12
 MIXED_LR_TURN = 13
+
+# --- Sabertooth Command Depths
+MIXED_FWD_STOP, MIXED_BWD_STOP, MIXED_R_STOP, MIXED_L_STOP, MIXED_LR_STRAIGHT = 64, 64, 64, 64, 64
+MIXED_FWD_MIN = 65
+MIXED_FWD_MAX = 127
+MIXED_BWD_MIN = 63
+MIXED_BWD_MAX = 0
+MIXED_R_MIN = 65
+MIXED_R_MAX = 127
+MIXED_L_MIN = 63
+MIXED_L_MAX = 0
 
 class SabertoothPacketizedAdapter:
 
@@ -96,7 +108,12 @@ class SabertoothPacketizedAdapter:
   #  3 - data: Specific data, who's interpretation depends on the command
   #  4 - checksum: a validation byte, who's interpretation and generation is defined in the sabertooth API
   def _get_packet_for_command(self,command,data):
-    checksum = (self._serial_address + command + data) & CHECKSUM_SALT 
+    checksum = (self._serial_address + int(command) + int(data)) & CHECKSUM_SALT 
+
+    # DEBUG
+    #print "motor command: ",self._serial_address,' ',command,' ',data,' ',checksum
+    print "motor command: ",self._serial_address,' ',int(command),' ',int(data),' ',checksum
+    
 
     #packet = {
     #  0:self._serial_address,
@@ -106,9 +123,9 @@ class SabertoothPacketizedAdapter:
 
     packet = bytearray(4)
     packet[0] = self._serial_address
-    packet[1] = command
-    packet[2] = data
-    packet[3] = checksum
+    packet[1] = chr(int(command))
+    packet[2] = chr(int(data))
+    packet[3] = chr(checksum)
   
     return packet
 
@@ -296,4 +313,35 @@ class SabertoothPacketizedAdapterGPIO(SabertoothPacketizedAdapter):
 
       while self._conn.wave_tx_busy():
         time.sleep(0.01)
+
+  def stop(self):
+    self._send_packet(
+      self._get_packet_for_command(
+        M1_FWD,0))
+    self._send_packet(
+      self._get_packet_for_command(
+        M2_FWD,0))
+
+  def goForward(self,power_percent=0):
+    pwr = min(80,max(0,power_percent))
+    command_data = MIXED_FWD_MIN + 0.01 * pwr * (MIXED_FWD_MAX - MIXED_FWD_MIN)
+    self._send_packet(self._get_packet_for_command(MIXED_BWD_FWD,command_data))
+
+  def goBackward(self,power_percent=0):
+    pwr = min(80,max(0,power_percent))
+    command_data = MIXED_BWD_MIN - 0.01 * pwr * (MIXED_FWD_MIN - MIXED_FWD_MAX)
+    self._send_packet(self._get_packet_for_command(MIXED_BWD_FWD,command_data))
+
+  def goRight(self,power_percent=0):
+    pwr = min(80,max(0,power_percent))
+    command_data = MIXED_R_MIN + 0.01 * pwr * (MIXED_R_MAX - MIXED_R_MIN)
+    self._send_packet(self._get_packet_for_command(MIXED_LR_TURN,command_data))
+  
+  def goLeft(self,power_percent=0):
+    pwr = min(80,max(0,power_percent))
+    command_data = MIXED_L_MIN - 0.01 * pwr * (MIXED_L_MIN - MIXED_L_MAX)
+    self._send_packet(self._get_packet_for_command(MIXED_LR_TURN,command_data))
+
+  def goStraight(self):
+    self._send_packet(self._get_packet_for_command(MIXED_LR_TURN,MIXED_LR_STRAIGHT))
 
