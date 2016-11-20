@@ -10,7 +10,7 @@ It makes a lot of assumptions about the hardware configuration of the rover.
 Under normal, full battery conditions the rover requires freedom of motion in a rectangular box stretching from the front of the rover to 10 feet ahead of it and 3 feet to either side of its starting position.
 
 usage:
-sudo python do_scripted_route_with_state_estimation.py
+sudo python do_scripted_route_with_sensor_dump.py
 """
 
 import time
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     # DEBUG
     print "reached main method"
 
-    start_time_tag = strftime("%Y%m%d_%H%M%S",time.gmtime())
+    start_time_tag = time.strftime("%Y%m%d_%H%M%S",time.gmtime())
     start_time = time.time()
 
     # Load calibration from disk.
@@ -66,10 +66,9 @@ if __name__ == '__main__':
 
     motorControllerAdapter = sabertooth_adapter.SabertoothPacketizedAdapterGPIO() 
     motorController = motor_control.MotorController(motorControllerAdapter)
-    imuSensor = imu.InertialSensorBNO055(
+    imuSensor = imu.ThreadedInertialSensorBNO055(
       calibration_data=cal_data,
       axis_remap=BNO_AXIS_REMAP)
-    stateEstimator = state_estimation.StateEstimator(sensor=imuSensor)
     
     dataRecorder = data_recorder.DataRecorder(DATA_LOG_FILE+'_'+start_time_tag)
 
@@ -98,38 +97,21 @@ if __name__ == '__main__':
         print "--- increasing speed, since it's been {} seconds ---".format(current_time - last_speed_increase)
         last_speed_increase = current_time
 
-      state_estimates = stateEstimator.getCurrentState()
-      print "Acceleration: ({accel_x},{accel_y},{accel_z}) - Position: ({x},{y},{z}) - program time: {t} (sec)".format(
-        accel_x=state_estimates['acceleration'][0],
-        accel_y=state_estimates['acceleration'][1],
-        accel_z=state_estimates['acceleration'][2],
-        x=state_estimates['position'][0],
-        y=state_estimates['position'][1],
-        z=state_estimates['position'][2],
-        t=state_estimates['t'] - start_time)
-
-      dataRecorder.captureData(
-        {'time':state_estimates['t'] - start_time,
-         'position_x':state_estimates['position'][0],
-         'position_y':state_estimates['position'][1],
-         'position_z':state_estimates['position'][2],
-         'velocity_x':state_estimates['velocity'][0],
-         'velocity_y':state_estimates['velocity'][1],
-         'velocity_z':state_estimates['velocity'][2],
-         'acceleration_x':state_estimates['acceleration'][0],
-         'acceleration_y':state_estimates['acceleration'][1],
-         'acceleration_z':state_estimates['acceleration'][2],
-        })
+      state_estimates = imuSensor.get_measurement()
+      print "Update Count: {count} - Update Time: {update_time} - Lookup Time: {lookup_time} - Acceleration: ({accel_x},{accel_y},{accel_z})".format(
+        count=state_estimates['update_count'],
+        lookup_time=state_estimates['lookup_time'],
+        update_time=state_estimates['update_time'],
+        accel_x=state_estimates['acceleration_x'],
+        accel_y=state_estimates['acceleration_y'],
+        accel_z=state_estimates['acceleration_z'])
 
       time.sleep(MAIN_LOOP_INTERVAL_SEC)
   finally:
     motorControllerAdapter.stop()
+    motorController.goForward(DEFAULT_MOTOR_SPEED)
+    motorController.goLeft(power_percent=30)
+    time.sleep(3.6)
+    motorControllerAdapter.stop()
     time.sleep(2)
 
-try:
-  dataRecorder.saveDataRecord()
-except:
-  record_data = dataRecorder.getDataRecord()
-  print ','.join(record_data['columns'])
-  for row_data in record_data['data_rows']:
-    print '[{data}],'.format(data=','.join(row_data))
