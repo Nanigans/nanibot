@@ -482,6 +482,15 @@ static const char *__pyx_f[] = {
 #define __Pyx_CLEAR(r)    do { PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);} while(0)
 #define __Pyx_XCLEAR(r)   do { if((r) != NULL) {PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);}} while(0)
 
+static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
+    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
+
+static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
+
+static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[], \
+    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args, \
+    const char* function_name);
+
 typedef struct {
     int code_line;
     PyCodeObject* code_object;
@@ -518,22 +527,31 @@ int __pyx_module_is_main_bno055_read_test = 0;
 
 /* Implementation of 'bno055_read_test' */
 static PyObject *__pyx_pf_16bno055_read_test_run_serial_read_test(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_num_trials); /* proto */
+static PyObject *__pyx_pf_16bno055_read_test_2run_serial_read_test_2(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_num_trials, int __pyx_v_sample_interval_usec, int __pyx_v_max_read_retries); /* proto */
 static char __pyx_k_ret[] = "ret";
 static char __pyx_k_main[] = "__main__";
 static char __pyx_k_test[] = "__test__";
 static char __pyx_k_num_trials[] = "num_trials";
 static char __pyx_k_bno055_read_test[] = "bno055_read_test";
+static char __pyx_k_max_read_retries[] = "max_read_retries";
 static char __pyx_k_run_serial_read_test[] = "run_serial_read_test";
+static char __pyx_k_sample_interval_usec[] = "sample_interval_usec";
+static char __pyx_k_run_serial_read_test_2[] = "run_serial_read_test_2";
 static char __pyx_k_home_pi_nanibot_sandboxes_first[] = "/home/pi/nanibot/sandboxes/first_rover_hacks/cython_libserialport_test_1/bno055_read_test.pyx";
 static PyObject *__pyx_n_s_bno055_read_test;
 static PyObject *__pyx_kp_s_home_pi_nanibot_sandboxes_first;
 static PyObject *__pyx_n_s_main;
+static PyObject *__pyx_n_s_max_read_retries;
 static PyObject *__pyx_n_s_num_trials;
 static PyObject *__pyx_n_s_ret;
 static PyObject *__pyx_n_s_run_serial_read_test;
+static PyObject *__pyx_n_s_run_serial_read_test_2;
+static PyObject *__pyx_n_s_sample_interval_usec;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_tuple_;
+static PyObject *__pyx_tuple__3;
 static PyObject *__pyx_codeobj__2;
+static PyObject *__pyx_codeobj__4;
 
 /* "bno055_read_test.pyx":3
  * cimport cbno055_read_test
@@ -580,6 +598,8 @@ static PyObject *__pyx_pf_16bno055_read_test_run_serial_read_test(CYTHON_UNUSED 
  * def run_serial_read_test(int num_trials):
  *   cdef int ret
  *   ret = cbno055_read_test.run_serial_read_test(num_trials)             # <<<<<<<<<<<<<<
+ * 
+ * def run_serial_read_test_2(int num_trials, int sample_interval_usec, int max_read_retries):
  */
   __pyx_v_ret = run_serial_read_test(__pyx_v_num_trials);
 
@@ -589,6 +609,113 @@ static PyObject *__pyx_pf_16bno055_read_test_run_serial_read_test(CYTHON_UNUSED 
  * def run_serial_read_test(int num_trials):             # <<<<<<<<<<<<<<
  *   cdef int ret
  *   ret = cbno055_read_test.run_serial_read_test(num_trials)
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "bno055_read_test.pyx":7
+ *   ret = cbno055_read_test.run_serial_read_test(num_trials)
+ * 
+ * def run_serial_read_test_2(int num_trials, int sample_interval_usec, int max_read_retries):             # <<<<<<<<<<<<<<
+ *   cdef int ret
+ *   ret = cbno055_read_test.run_serial_read_test_2(num_trials, sample_interval_usec, max_read_retries)
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_16bno055_read_test_3run_serial_read_test_2(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_16bno055_read_test_3run_serial_read_test_2 = {"run_serial_read_test_2", (PyCFunction)__pyx_pw_16bno055_read_test_3run_serial_read_test_2, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_16bno055_read_test_3run_serial_read_test_2(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  int __pyx_v_num_trials;
+  int __pyx_v_sample_interval_usec;
+  int __pyx_v_max_read_retries;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("run_serial_read_test_2 (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_num_trials,&__pyx_n_s_sample_interval_usec,&__pyx_n_s_max_read_retries,0};
+    PyObject* values[3] = {0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_num_trials)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_sample_interval_usec)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("run_serial_read_test_2", 1, 3, 3, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        }
+        case  2:
+        if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_max_read_retries)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("run_serial_read_test_2", 1, 3, 3, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "run_serial_read_test_2") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+    }
+    __pyx_v_num_trials = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_num_trials == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_sample_interval_usec = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_sample_interval_usec == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_max_read_retries = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_max_read_retries == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("run_serial_read_test_2", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("bno055_read_test.run_serial_read_test_2", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_16bno055_read_test_2run_serial_read_test_2(__pyx_self, __pyx_v_num_trials, __pyx_v_sample_interval_usec, __pyx_v_max_read_retries);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_16bno055_read_test_2run_serial_read_test_2(CYTHON_UNUSED PyObject *__pyx_self, int __pyx_v_num_trials, int __pyx_v_sample_interval_usec, int __pyx_v_max_read_retries) {
+  CYTHON_UNUSED int __pyx_v_ret;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("run_serial_read_test_2", 0);
+
+  /* "bno055_read_test.pyx":9
+ * def run_serial_read_test_2(int num_trials, int sample_interval_usec, int max_read_retries):
+ *   cdef int ret
+ *   ret = cbno055_read_test.run_serial_read_test_2(num_trials, sample_interval_usec, max_read_retries)             # <<<<<<<<<<<<<<
+ */
+  __pyx_v_ret = run_serial_read_test_2(__pyx_v_num_trials, __pyx_v_sample_interval_usec, __pyx_v_max_read_retries);
+
+  /* "bno055_read_test.pyx":7
+ *   ret = cbno055_read_test.run_serial_read_test(num_trials)
+ * 
+ * def run_serial_read_test_2(int num_trials, int sample_interval_usec, int max_read_retries):             # <<<<<<<<<<<<<<
+ *   cdef int ret
+ *   ret = cbno055_read_test.run_serial_read_test_2(num_trials, sample_interval_usec, max_read_retries)
  */
 
   /* function exit code */
@@ -624,9 +751,12 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_bno055_read_test, __pyx_k_bno055_read_test, sizeof(__pyx_k_bno055_read_test), 0, 0, 1, 1},
   {&__pyx_kp_s_home_pi_nanibot_sandboxes_first, __pyx_k_home_pi_nanibot_sandboxes_first, sizeof(__pyx_k_home_pi_nanibot_sandboxes_first), 0, 0, 1, 0},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
+  {&__pyx_n_s_max_read_retries, __pyx_k_max_read_retries, sizeof(__pyx_k_max_read_retries), 0, 0, 1, 1},
   {&__pyx_n_s_num_trials, __pyx_k_num_trials, sizeof(__pyx_k_num_trials), 0, 0, 1, 1},
   {&__pyx_n_s_ret, __pyx_k_ret, sizeof(__pyx_k_ret), 0, 0, 1, 1},
   {&__pyx_n_s_run_serial_read_test, __pyx_k_run_serial_read_test, sizeof(__pyx_k_run_serial_read_test), 0, 0, 1, 1},
+  {&__pyx_n_s_run_serial_read_test_2, __pyx_k_run_serial_read_test_2, sizeof(__pyx_k_run_serial_read_test_2), 0, 0, 1, 1},
+  {&__pyx_n_s_sample_interval_usec, __pyx_k_sample_interval_usec, sizeof(__pyx_k_sample_interval_usec), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
@@ -649,6 +779,18 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
   __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_home_pi_nanibot_sandboxes_first, __pyx_n_s_run_serial_read_test, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+
+  /* "bno055_read_test.pyx":7
+ *   ret = cbno055_read_test.run_serial_read_test(num_trials)
+ * 
+ * def run_serial_read_test_2(int num_trials, int sample_interval_usec, int max_read_retries):             # <<<<<<<<<<<<<<
+ *   cdef int ret
+ *   ret = cbno055_read_test.run_serial_read_test_2(num_trials, sample_interval_usec, max_read_retries)
+ */
+  __pyx_tuple__3 = PyTuple_Pack(4, __pyx_n_s_num_trials, __pyx_n_s_sample_interval_usec, __pyx_n_s_max_read_retries, __pyx_n_s_ret); if (unlikely(!__pyx_tuple__3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_tuple__3);
+  __Pyx_GIVEREF(__pyx_tuple__3);
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(3, 0, 4, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_home_pi_nanibot_sandboxes_first, __pyx_n_s_run_serial_read_test_2, 7, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -760,6 +902,18 @@ PyMODINIT_FUNC PyInit_bno055_read_test(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_run_serial_read_test, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
+  /* "bno055_read_test.pyx":7
+ *   ret = cbno055_read_test.run_serial_read_test(num_trials)
+ * 
+ * def run_serial_read_test_2(int num_trials, int sample_interval_usec, int max_read_retries):             # <<<<<<<<<<<<<<
+ *   cdef int ret
+ *   ret = cbno055_read_test.run_serial_read_test_2(num_trials, sample_interval_usec, max_read_retries)
+ */
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_16bno055_read_test_3run_serial_read_test_2, NULL, __pyx_n_s_bno055_read_test); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_run_serial_read_test_2, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
   /* "bno055_read_test.pyx":1
  * cimport cbno055_read_test             # <<<<<<<<<<<<<<
  * 
@@ -808,6 +962,145 @@ end:
     return (__Pyx_RefNannyAPIStruct *)r;
 }
 #endif
+
+static void __Pyx_RaiseArgtupleInvalid(
+    const char* func_name,
+    int exact,
+    Py_ssize_t num_min,
+    Py_ssize_t num_max,
+    Py_ssize_t num_found)
+{
+    Py_ssize_t num_expected;
+    const char *more_or_less;
+    if (num_found < num_min) {
+        num_expected = num_min;
+        more_or_less = "at least";
+    } else {
+        num_expected = num_max;
+        more_or_less = "at most";
+    }
+    if (exact) {
+        more_or_less = "exactly";
+    }
+    PyErr_Format(PyExc_TypeError,
+                 "%.200s() takes %.8s %" CYTHON_FORMAT_SSIZE_T "d positional argument%.1s (%" CYTHON_FORMAT_SSIZE_T "d given)",
+                 func_name, more_or_less, num_expected,
+                 (num_expected == 1) ? "" : "s", num_found);
+}
+
+static void __Pyx_RaiseDoubleKeywordsError(
+    const char* func_name,
+    PyObject* kw_name)
+{
+    PyErr_Format(PyExc_TypeError,
+        #if PY_MAJOR_VERSION >= 3
+        "%s() got multiple values for keyword argument '%U'", func_name, kw_name);
+        #else
+        "%s() got multiple values for keyword argument '%s'", func_name,
+        PyString_AsString(kw_name));
+        #endif
+}
+
+static int __Pyx_ParseOptionalKeywords(
+    PyObject *kwds,
+    PyObject **argnames[],
+    PyObject *kwds2,
+    PyObject *values[],
+    Py_ssize_t num_pos_args,
+    const char* function_name)
+{
+    PyObject *key = 0, *value = 0;
+    Py_ssize_t pos = 0;
+    PyObject*** name;
+    PyObject*** first_kw_arg = argnames + num_pos_args;
+    while (PyDict_Next(kwds, &pos, &key, &value)) {
+        name = first_kw_arg;
+        while (*name && (**name != key)) name++;
+        if (*name) {
+            values[name-argnames] = value;
+            continue;
+        }
+        name = first_kw_arg;
+        #if PY_MAJOR_VERSION < 3
+        if (likely(PyString_CheckExact(key)) || likely(PyString_Check(key))) {
+            while (*name) {
+                if ((CYTHON_COMPILING_IN_PYPY || PyString_GET_SIZE(**name) == PyString_GET_SIZE(key))
+                        && _PyString_Eq(**name, key)) {
+                    values[name-argnames] = value;
+                    break;
+                }
+                name++;
+            }
+            if (*name) continue;
+            else {
+                PyObject*** argname = argnames;
+                while (argname != first_kw_arg) {
+                    if ((**argname == key) || (
+                            (CYTHON_COMPILING_IN_PYPY || PyString_GET_SIZE(**argname) == PyString_GET_SIZE(key))
+                             && _PyString_Eq(**argname, key))) {
+                        goto arg_passed_twice;
+                    }
+                    argname++;
+                }
+            }
+        } else
+        #endif
+        if (likely(PyUnicode_Check(key))) {
+            while (*name) {
+                int cmp = (**name == key) ? 0 :
+                #if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION >= 3
+                    (PyUnicode_GET_SIZE(**name) != PyUnicode_GET_SIZE(key)) ? 1 :
+                #endif
+                    PyUnicode_Compare(**name, key);
+                if (cmp < 0 && unlikely(PyErr_Occurred())) goto bad;
+                if (cmp == 0) {
+                    values[name-argnames] = value;
+                    break;
+                }
+                name++;
+            }
+            if (*name) continue;
+            else {
+                PyObject*** argname = argnames;
+                while (argname != first_kw_arg) {
+                    int cmp = (**argname == key) ? 0 :
+                    #if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION >= 3
+                        (PyUnicode_GET_SIZE(**argname) != PyUnicode_GET_SIZE(key)) ? 1 :
+                    #endif
+                        PyUnicode_Compare(**argname, key);
+                    if (cmp < 0 && unlikely(PyErr_Occurred())) goto bad;
+                    if (cmp == 0) goto arg_passed_twice;
+                    argname++;
+                }
+            }
+        } else
+            goto invalid_keyword_type;
+        if (kwds2) {
+            if (unlikely(PyDict_SetItem(kwds2, key, value))) goto bad;
+        } else {
+            goto invalid_keyword;
+        }
+    }
+    return 0;
+arg_passed_twice:
+    __Pyx_RaiseDoubleKeywordsError(function_name, key);
+    goto bad;
+invalid_keyword_type:
+    PyErr_Format(PyExc_TypeError,
+        "%.200s() keywords must be strings", function_name);
+    goto bad;
+invalid_keyword:
+    PyErr_Format(PyExc_TypeError,
+    #if PY_MAJOR_VERSION < 3
+        "%.200s() got an unexpected keyword argument '%.200s'",
+        function_name, PyString_AsString(key));
+    #else
+        "%s() got an unexpected keyword argument '%U'",
+        function_name, key);
+    #endif
+bad:
+    return -1;
+}
 
 static int __pyx_bisect_code_objects(__Pyx_CodeObjectCacheEntry* entries, int count, int code_line) {
     int start = 0, mid = 0, end = count - 1;

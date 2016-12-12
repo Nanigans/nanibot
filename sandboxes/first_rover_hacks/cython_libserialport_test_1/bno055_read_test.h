@@ -1,6 +1,6 @@
 #include "libserialport.h"
 
-#define DO_BLOCKING_READ_WRITE 1
+#define DO_BLOCKING_READ_WRITE 0
 #define READ_WRITE_TIMEOUT_SEC 5
 
 #define GPIO_IMU_RST 18
@@ -23,7 +23,13 @@ typedef struct {
 
 int main(void);
 
-int run_serial_read_test(int num_trials);
+void wakeup_handler(int signum);
+
+void finalize_wakeup_attempt(void);
+
+int run_serial_read_test(int num_samples);
+
+int run_serial_read_test_2(int num_samples, int sample_interval_usec, int max_read_retries);
 
 int get_serial_adapter(struct sp_port **my_port, struct sp_port_config *my_port_config);
 

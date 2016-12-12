@@ -5,7 +5,7 @@ IDIR1 = /home/pi/libserialport
 #_OBJ = main.o
 #_SECONDOBJ = test1.o
 DEPS = serialport.c linux.c linux_termios.c 
-LIBS = -lrt -lpigpio
+LIBS = -lrt -lpigpio -Wstrict-overflow=5
 
 CFLAGS = -iquote$(QIDIR1) -I$(IDIR1) -Wall -pthread
 #OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
@@ -13,7 +13,7 @@ CFLAGS = -iquote$(QIDIR1) -I$(IDIR1) -Wall -pthread
 #CC=gcc
 
 
-sensor_read_test_2: sensor_read_test_2.c $(DEPS)
+sensor_read_test_5: sensor_read_test_5.c $(DEPS)
 	gcc -o $@.exe $^ $(CFLAGS) $(LIBS)
 
 sensor_reset: sensor_reset.c 
