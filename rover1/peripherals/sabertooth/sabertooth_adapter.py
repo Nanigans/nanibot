@@ -329,7 +329,8 @@ class SabertoothPacketizedAdapterGPIO(SabertoothPacketizedAdapter):
 
   def goBackward(self,power_percent=0):
     pwr = min(80,max(0,power_percent))
-    command_data = MIXED_BWD_MIN - 0.01 * pwr * (MIXED_FWD_MIN - MIXED_FWD_MAX)
+    #command_data = MIXED_BWD_MIN - 0.01 * pwr * (MIXED_FWD_MIN - MIXED_FWD_MAX)
+    command_data = MIXED_BWD_MIN - 0.01 * pwr * (MIXED_BWD_MIN - MIXED_BWD_MAX)
     self._send_packet(self._get_packet_for_command(MIXED_BWD_FWD,command_data))
 
   def goRight(self,power_percent=0):
