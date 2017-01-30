@@ -2,13 +2,7 @@ import time
 import sys
 import logging
 
-class StateEstimator:
-
-  _sensor = None
-  _last_update_time = None
-  _last_acceleration = None
-  _last_velocity = None
-  _last_position = None
+class StateEstimator(object):
 
   def __init__(self,sensor):
 

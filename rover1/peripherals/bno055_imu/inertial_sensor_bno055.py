@@ -66,6 +66,32 @@ def read_bno_multiproc(bno, update_frequency_hz, shared_data):
         # Sleep until the next reading.
         time.sleep(1.0/update_frequency_hz)
 
+def read_bno_heading_multiproc(bno, update_frequency_hz, shared_data):
+    """Function to read the BNO sensor and update the shared memory array shared_data
+    shared_data[0] := update count
+    shared_data[1] := update time
+    shared_data[2] := heading
+    """
+    # update count
+    shared_data[0] = 0
+    while True:
+    
+        # Grab new BNO sensor readings.
+        #temp = bno.read_temp()
+        #linX, linY, linZ = bno.read_linear_acceleration()
+        heading, roll, pitch = bno.read_euler()
+        #x, y, z, w = bno.read_quaternion()
+        #sys, gyro, accel, mag = bno.get_calibration_status()
+        #status, self_test, error = bno.get_system_status(run_self_test=False)
+        #if error != 0:
+        #    print 'Error! Value: {0}'.format(error)
+        
+        shared_data[0] += 1
+        shared_data[1] = time.time()
+        shared_data[2] = heading
+        # Sleep until the next reading.
+        time.sleep(1.0/update_frequency_hz)
+
 class InertialSensorBNO055:
 
   _sensor = None
@@ -142,14 +168,9 @@ class ThreadedInertialSensorBNO055:
     
     return result
 
-class MultiprocessInertialSensorBNO055:
+class MultiprocessInertialSensorBNO055(object):
 
-  BNO_UPDATE_FREQUENCY_HZ = 100.0
-  _sensor = None
-  _multiproc_shared_data = None
-  _state = {}
-
-  def __init__(self,calibration_data=None,axis_remap=None):
+  def __init__(self,calibration_data=None,axis_remap=None,sensor_update_frequency_hz=20.0):
 
     # Create and configure the BNO sensor connection.
     # Raspberry Pi configuration with serial UART and RST connected to GPIO 18:
@@ -164,12 +185,14 @@ class MultiprocessInertialSensorBNO055:
 
     # The 5 elements of the shared memory array are (update count, update time, linear_acceleration_x, linear_acceleration_y, linear_acceleration_z)
     self._multiproc_shared_data = multiproc.Array('d',5)
+    self._state = {}
+    self.sensor_update_frequency_hz = sensor_update_frequency_hz
 
     sensor_proc = multiproc.Process(
       target=read_bno_multiproc,
       args=(
         self._sensor,
-        self.BNO_UPDATE_FREQUENCY_HZ,
+        self.sensor_update_frequency_hz,
         self._multiproc_shared_data))
     sensor_proc.daemon = True  # Don't let the BNO reading thread block exiting.
     sensor_proc.start()
@@ -184,4 +207,47 @@ class MultiprocessInertialSensorBNO055:
     result['acceleration_x'] = shared_data[2]
     result['acceleration_y'] = shared_data[3]
     result['acceleration_z'] = shared_data[4]
+    return result
+
+class MultiprocessHeadingSensorBNO055(object):
+
+  def __init__(self,calibration_data=None,axis_remap=None,sensor_update_frequency_hz=20.0):
+
+    # Create and configure the BNO sensor connection.
+    # Raspberry Pi configuration with serial UART and RST connected to GPIO 18:
+    self._sensor = BNO055.BNO055(serial_port='/dev/ttyAMA0', rst=18)
+
+    if not self._sensor.begin():
+      raise RuntimeError('Failed to initialize BNO055!')
+    if axis_remap is not None:
+      self._sensor.set_axis_remap(**axis_remap)
+    if calibration_data is not None:
+      self._sensor.set_calibration(calibration_data)
+
+    # The 3 elements of the shared memory array are (update count, update time, heading)
+    self._multiproc_shared_data = multiproc.Array('d',3)
+    self._state = {}
+    self.sensor_update_frequency_hz = sensor_update_frequency_hz
+
+    sensor_proc = multiproc.Process(
+      target=read_bno_heading_multiproc,
+      args=(
+        self._sensor,
+        self.sensor_update_frequency_hz,
+        self._multiproc_shared_data))
+    sensor_proc.daemon = True  # Don't let the BNO reading thread block exiting.
+    sensor_proc.start()
+    self._process = sensor_proc
+
+  def shutdown(self,timeout=10):
+    self._process.join(timeout)
+
+  def get_measurement(self):
+     
+    shared_data = self._multiproc_shared_data
+    result = {}
+    result['lookup_time'] = time.time()
+    result['update_count'] = shared_data[0]
+    result['update_time'] = shared_data[1]
+    result['heading'] = shared_data[2]
     return result

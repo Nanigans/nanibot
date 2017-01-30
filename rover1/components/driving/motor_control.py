@@ -1,6 +1,6 @@
 import time
 
-class MotorController:
+class MotorController(object):
 
   _adapter = None
   _currentFwdBwdSetting = None
@@ -17,6 +17,14 @@ class MotorController:
     self._currentFwdBwdSetting = 0
     self._currentLeftRightSetting = 0
     self._lastUpdate = time.time()
+
+  @property
+  def currentFwdBwdSetting(self):
+    return self._currentFwdBwdSetting
+
+  @property
+  def currentLeftRightSetting(self):
+    return self._currentLeftRightSetting
 
   def goForward(self,power_percent=0):
     self._adapter.goForward(power_percent)
