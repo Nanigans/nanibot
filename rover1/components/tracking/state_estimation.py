@@ -47,4 +47,32 @@ class StateEstimator(object):
       'acceleration':self._last_acceleration,
       't':self._last_update_time}
 
+class HeadingEstimator(object):
+    
+    def __init__(self,sensor):
+        
+        self._sensor = sensor
+        self._last_validity_time = time.time()
+        self._last_heading = 0
+        
+    @property
+    def last_heading(self):
+        return self._last_heading
+    
+    @property
+    def last_validity_time(self):
+        return self._last_validity_time
+    
+    def _updateStateEstimates(self):
+        
+        meas = self._sensor.get_measurement()
+        # - Update state estimates
+        self._last_validity_time = meas['update_time']
+        self._last_heading = meas['heading']
+        
+    def getCurrentState(self):
+        self._updateStateEstimates()
 
+        return {
+            'heading':self.last_heading,
+            'validity_time':self.last_validity_time}
