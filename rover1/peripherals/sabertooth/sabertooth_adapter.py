@@ -55,7 +55,7 @@ MIXED_R_MAX = 127
 MIXED_L_MIN = 63
 MIXED_L_MAX = 0
 
-class SabertoothPacketizedAdapter:
+class SabertoothPacketizedAdapter(object):
 
   _conn = None
   _serial_address = None
@@ -111,7 +111,6 @@ class SabertoothPacketizedAdapter:
     checksum = (self._serial_address + int(command) + int(data)) & CHECKSUM_SALT 
 
     # DEBUG
-    #print "motor command: ",self._serial_address,' ',command,' ',data,' ',checksum
     print "motor command: ",self._serial_address,' ',int(command),' ',int(data),' ',checksum
     
 
@@ -137,7 +136,41 @@ class SabertoothPacketizedAdapter:
   #----- End of Main Sabertooth API Implementation for Packetized Serial ------
 
 
+  # ---- Main External Methods for Affecting Moter Behavior ----
+  def stop(self):
+    self._send_packet(
+      self._get_packet_for_command(
+        M1_FWD,0))
+    self._send_packet(
+      self._get_packet_for_command(
+        M2_FWD,0))
 
+  def goForward(self,power_percent=0):
+    pwr = min(80,max(0,power_percent))
+    command_data = MIXED_FWD_MIN + 0.01 * pwr * (MIXED_FWD_MAX - MIXED_FWD_MIN)
+    self._send_packet(self._get_packet_for_command(MIXED_BWD_FWD,command_data))
+
+  def goBackward(self,power_percent=0):
+    pwr = min(80,max(0,power_percent))
+    #command_data = MIXED_BWD_MIN - 0.01 * pwr * (MIXED_FWD_MIN - MIXED_FWD_MAX)
+    command_data = MIXED_BWD_MIN - 0.01 * pwr * (MIXED_BWD_MIN - MIXED_BWD_MAX)
+    self._send_packet(self._get_packet_for_command(MIXED_BWD_FWD,command_data))
+
+  def goRight(self,power_percent=0):
+    pwr = min(80,max(0,power_percent))
+    command_data = MIXED_R_MIN + 0.01 * pwr * (MIXED_R_MAX - MIXED_R_MIN)
+    self._send_packet(self._get_packet_for_command(MIXED_LR_TURN,command_data))
+  
+  def goLeft(self,power_percent=0):
+    pwr = min(80,max(0,power_percent))
+    command_data = MIXED_L_MIN - 0.01 * pwr * (MIXED_L_MIN - MIXED_L_MAX)
+    self._send_packet(self._get_packet_for_command(MIXED_LR_TURN,command_data))
+
+  def goStraight(self):
+    self._send_packet(self._get_packet_for_command(MIXED_LR_TURN,MIXED_LR_STRAIGHT))
+  # ---- End of Main External Methods for Affecting Moter Behavior ----
+
+  
   #--------------- test scripts --------------
 
   def execute_timed_commands(self,commands,default_duration):
@@ -230,19 +263,11 @@ class SabertoothPacketizedAdapter:
       self._send_packet(
         self._get_packet_for_command(
           M1_FWD,0))
-      
-
-  def stop(self):
-    self._send_packet(
-      self._get_packet_for_command(
-        M1_FWD,0))
-    self._send_packet(
-      self._get_packet_for_command(
-        M2_FWD,0))
+  
+  # ----------- End of Test Scripts ------------ 
 
 class SabertoothPacketizedAdapterGPIO(SabertoothPacketizedAdapter):
   
-  _conn = None
   _gpio_tx_port = None
   _gpio_baud = None
   _gpio_offset = None
@@ -313,36 +338,4 @@ class SabertoothPacketizedAdapterGPIO(SabertoothPacketizedAdapter):
 
       while self._conn.wave_tx_busy():
         time.sleep(0.01)
-
-  def stop(self):
-    self._send_packet(
-      self._get_packet_for_command(
-        M1_FWD,0))
-    self._send_packet(
-      self._get_packet_for_command(
-        M2_FWD,0))
-
-  def goForward(self,power_percent=0):
-    pwr = min(80,max(0,power_percent))
-    command_data = MIXED_FWD_MIN + 0.01 * pwr * (MIXED_FWD_MAX - MIXED_FWD_MIN)
-    self._send_packet(self._get_packet_for_command(MIXED_BWD_FWD,command_data))
-
-  def goBackward(self,power_percent=0):
-    pwr = min(80,max(0,power_percent))
-    #command_data = MIXED_BWD_MIN - 0.01 * pwr * (MIXED_FWD_MIN - MIXED_FWD_MAX)
-    command_data = MIXED_BWD_MIN - 0.01 * pwr * (MIXED_BWD_MIN - MIXED_BWD_MAX)
-    self._send_packet(self._get_packet_for_command(MIXED_BWD_FWD,command_data))
-
-  def goRight(self,power_percent=0):
-    pwr = min(80,max(0,power_percent))
-    command_data = MIXED_R_MIN + 0.01 * pwr * (MIXED_R_MAX - MIXED_R_MIN)
-    self._send_packet(self._get_packet_for_command(MIXED_LR_TURN,command_data))
-  
-  def goLeft(self,power_percent=0):
-    pwr = min(80,max(0,power_percent))
-    command_data = MIXED_L_MIN - 0.01 * pwr * (MIXED_L_MIN - MIXED_L_MAX)
-    self._send_packet(self._get_packet_for_command(MIXED_LR_TURN,command_data))
-
-  def goStraight(self):
-    self._send_packet(self._get_packet_for_command(MIXED_LR_TURN,MIXED_LR_STRAIGHT))
 
