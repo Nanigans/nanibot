@@ -12,6 +12,26 @@ The main computer is a Raspberry Pi 2, running a standard Raspbian OS, but with 
 The main software is designed to be flexible enough to support a variety of peripheral devices.  Presently, the following devices are supported:
 * Adafruit BNO055 absolute orientation IMU fusion breakout board (inertial measurement sensor)
 * Dimension Engineering Sabertooth 2x12 motor driver
+## Rover1 Pics
+![Front View](media/IMG_3229.JPG)
+![Back View](media/IMG_3228.JPG)
+![Top View](media/IMG_3227.JPG)
+# Requirements
+Summary of software requirements:
+* Raspbian OS
+* Python 2
+  * virtualenv
+  * virtualenvwrapper
+  * Numpy
+  * Pandas
+  * SciPy
+  * pigpio (see further explanation below)
+  * smbus
+  * Adafruit_BNO055 (BNO055)
+* Adafruit_Python_BNO055 library and python interface
+  * https://github.com/adafruit/Adafruit_Python_BNO055.git  
+* pigpio library and interfaces
+  * http://abyz.co.uk/rpi/pigpio/index.html
 # License
 MIT License
 
