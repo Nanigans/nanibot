@@ -54,3 +54,19 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+BNO055.py Absolute Orientation Sensor Python Library is copyright (c) 2015 Adafruit 
+Industries and released under a MIT License.  See more details at:
+  https://github.com/adafruit/Adafruit_Python_BNO055/blob/master/LICENSE
+
+Twitter Bootstrap is copyright 2011-2015 Twitter, Inc. and released
+under a MIT license.  See more details at its homepage:
+  http://getbootstrap.com/
+
+Three.js library is copyright 2015-2016 three.js authors and released
+under a MIT license.  See more details at its homepage:
+  http://threejs.org/
+
+jQuery is copyright jQuery Foundation and other contributors and released
+under a license at:
+  https://github.com/jquery/jquery/blob/master/LICENSE.txt
