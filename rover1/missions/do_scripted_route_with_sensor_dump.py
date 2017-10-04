@@ -1,8 +1,31 @@
-if __name__ == '__main__' and __package__ is None:
-  from os import sys, path
-  sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
 """
+MIT License
+
+Copyright (c) 2017 Nanigans
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+BNO055.py Absolute Orientation Sensor Python Library is copyright (c) 2015 Adafruit 
+Industries and released under a MIT License.  See more details at:
+  https://github.com/adafruit/Adafruit_Python_BNO055/blob/master/LICENSE
+
+
 This mission drives the rover along a scripted route, periodically makes state estimates of the rover position, and logs data for offline analysis.
 
 It makes a lot of assumptions about the hardware configuration of the rover.
@@ -12,6 +35,10 @@ Under normal, full battery conditions the rover requires freedom of motion in a 
 usage:
 sudo python do_scripted_route_with_sensor_dump.py
 """
+
+if __name__ == '__main__' and __package__ is None:
+  from os import sys, path
+  sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 import time
 import threading
