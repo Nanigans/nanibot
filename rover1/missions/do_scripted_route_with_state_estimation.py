@@ -84,7 +84,7 @@ if __name__ == '__main__':
     # DEBUG
     print "reached main method"
 
-    start_time_tag = strftime("%Y%m%d_%H%M%S",time.gmtime())
+    start_time_tag = time.strftime("%Y%m%d_%H%M%S",time.gmtime())
     start_time = time.time()
 
     # Load calibration from disk.
